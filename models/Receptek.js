@@ -12,6 +12,7 @@ const ReceptekSchema = new Schema({
     dislike: Number,
     saved: Number,
     comments: Array(String),
+    createdUserId: Number
 });
 
 module.exports = model('recipe', ReceptekSchema);
