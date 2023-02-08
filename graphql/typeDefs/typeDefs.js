@@ -37,12 +37,11 @@ module.exports = gql`
         registerUser(registerInput: RegisterInput!): User
         loginUser(loginInput: LoginInput!): User
         deleteUser(deleteUserId: String!): Boolean
-        editUser(editUser: UserInput!): Boolean
+        editUser(editUser: UserInput!, editId: String!): Boolean
     }
 
     type User {
         _id: String
-        fullName: [fullName]
         username: String
         email: String
         password: String
@@ -55,19 +54,8 @@ module.exports = gql`
         user
         admin
     }
-
-    type fullName {
-        firstName: String
-        lastName: String
-    }
-
-    input fullNameInput {
-        firstName: String
-        lastName: String
-    }
-
+    
     input RegisterInput {
-        fullName: [fullNameInput]
         username: String
         email: String
         password: String
@@ -75,11 +63,10 @@ module.exports = gql`
     }
     
     input UserInput{
-        fullName: [fullNameInput]
         username: String
         email: String
         password: String
-        role: Role = user
+        role: Role
     }
 
     input LoginInput {

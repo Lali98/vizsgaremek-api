@@ -5,14 +5,13 @@ const bcrypt = require('bcrypt');
 
 module.exports = {
     Mutation: {
-        async registerUser(_, {registerInput: {fullName: {firstName, lastName}, username, email, password}}) {
+        async registerUser(_, {registerInput: {username, email, password}}) {
             const oldUser = await User.findOne({email});
             if (oldUser) {
                 throw new ApolloError(`A user is already registered with the email "${email}".`, 'USER_ALREADY_REGISTERED');
             }
             let encryptedPassword = await bcrypt.hash(password, 10);
             const newUser = new User({
-                fullName: {firstName, lastName},
                 username: username,
                 email: email.toLowerCase(),
                 password: encryptedPassword
@@ -28,7 +27,6 @@ module.exports = {
             const result = await newUser.save();
             return {
                 _id: result._id,
-                role: 'user',
                 ...result._doc
             }
         },
@@ -51,6 +49,19 @@ module.exports = {
             } else {
                 throw new ApolloError('Incorrect password', 'INCORRECT_PASSWORD');
             }
+        },
+        async deleteUser(_, {deleteUserId}) {
+            return (User.deleteOne({_id: deleteUserId})).deletedCount;
+        },
+        async editUser(_, {editUser: {username, email, password, role}, editId}) {
+            let encryptedNewPassword = await bcrypt.hash(password, 10);
+            const result = await User.updateOne({_id: editId}, {
+                username: username,
+                email: email.toLowerCase(),
+                password: encryptedNewPassword,
+                role: role
+            });
+            return result.modifiedCount;
         }
     },
 
