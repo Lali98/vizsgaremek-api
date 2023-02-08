@@ -51,7 +51,8 @@ module.exports = {
             }
         },
         async deleteUser(_, {deleteUserId}) {
-            return (User.deleteOne({_id: deleteUserId})).deletedCount;
+            const res = await User.deleteOne({_id: deleteUserId});
+            return res.deletedCount;
         },
         async editUser(_, {editUser: {username, email, password, role}, editId}) {
             let encryptedNewPassword = await bcrypt.hash(password, 10);
