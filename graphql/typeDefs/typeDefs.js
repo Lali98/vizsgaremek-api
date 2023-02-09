@@ -18,10 +18,9 @@ module.exports = gql`
     input RecipeInput {
         name: String
         description: String
-        images: [String] = []
-        ingredients: [String] = []
-        steps: [String] = []
-        comments: [String] = []
+        images: [String]
+        ingredients: [String]
+        steps: [String]
     }
 
     type Query {
@@ -34,6 +33,7 @@ module.exports = gql`
         createRecipe(recipe: RecipeInput): Recipe!
         deleteRecipe(recipeId: ID!): Boolean
         editRecipe(editRecipe: RecipeInput, editId: ID!): Boolean
+        addComment(comment: Comment, editId: String!): Boolean
         registerUser(registerInput: RegisterInput!): User
         loginUser(loginInput: LoginInput!): User
         deleteUser(deleteUserId: String!): Boolean
@@ -72,5 +72,10 @@ module.exports = gql`
     input LoginInput {
         email: String
         password: String
+    }
+    
+    input Comment {
+        user_id: String,
+        message: String
     }
 `;

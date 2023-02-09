@@ -11,7 +11,17 @@ const ReceptekSchema = new Schema({
     like: Number,
     dislike: Number,
     saved: Number,
-    comments: Array(String),
+    // comments: Array(String),
+    comments: [{
+        user_id: {
+            type: String,
+            required: true
+        },
+        message: {
+            type: String,
+            required: true
+        }
+    }],
     createdUserId: Number
 });
 

@@ -33,23 +33,28 @@ module.exports = {
             const res = await Receptek.deleteOne({_id: recipeId});
             return res.deletedCount;
         },
-        async editRecipe(_, {editRecipe: {name, description, images, ingredients, steps, comments}, editId}) {
+        async editRecipe(_, {editRecipe: {name, description, images, ingredients, steps}, editId}) {
             const result = await Receptek.updateOne({_id: editId}, {
                 $set: {
-                    name: name,
-                    description: description,
-                    editedAt: new Date()
-                },
-                $push: {
-                    images: { $each: images },
-                    ingredients: { $each: ingredients },
-                    steps: { $each: steps },
-                    comments: { $each: comments}
+                    name: name, description: description, editedAt: new Date()
+                }, $push: {
+                    images: images, ingredients: ingredients, steps: steps,
                 }
             });
             return result.modifiedCount;
+        },
+        async addComment(_, {comment: {user_id, message}, editId}) {
+            const result = await Receptek.findOneAndUpdate({_id: editId}, {
+                $push: {
+                    comments: {
+                        user_id: user_id, message: message
+                    }
+                }
+            });
+            if (!result.ok) {
+                return false;
+            }
+            return true;
         }
-
-
     }
 }
