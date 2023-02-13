@@ -51,8 +51,10 @@ module.exports = {
                     }
                 }
             });
-            return result;
-
+            if (!result) {
+                return false;
+            }
+            return true;
         }
     }
 }
